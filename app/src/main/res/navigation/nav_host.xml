@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/classSelection">
+
+    <fragment
+        android:id="@+id/classSelection"
+        android:name="com.example.tareservefinal.ClassSelection"
+        android:label="fragment_class_selection"
+        tools:layout="@layout/fragment_class_selection" >
+        <action
+            android:id="@+id/action_classSelection_to_taSelection"
+            app:destination="@id/taSelection" />
+        <action
+            android:id="@+id/action_classSelection_to_taScreen"
+            app:destination="@id/taScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/taSelection"
+        android:name="com.example.tareservefinal.TaSelection"
+        android:label="fragment_ta_selection"
+        tools:layout="@layout/fragment_ta_selection" >
+        <action
+            android:id="@+id/action_taSelection_to_taInfo"
+            app:destination="@id/taInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/taScreen"
+        android:name="com.example.tareservefinal.TaScreen"
+        android:label="fragment_ta_screen"
+        tools:layout="@layout/fragment_ta_screen" />
+    <fragment
+        android:id="@+id/taInfo"
+        android:name="com.example.tareservefinal.TaInfo"
+        android:label="fragment_ta_info"
+        tools:layout="@layout/fragment_ta_info" />
+</navigation>

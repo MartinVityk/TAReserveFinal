@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "886038774832",
+    "firebase_url": "https://tareservefinal.firebaseio.com",
+    "project_id": "tareservefinal",
+    "storage_bucket": "tareservefinal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886038774832:android:9bc81f2a9448f3769559f5",
+        "android_client_info": {
+          "package_name": "com.example.tareservefinal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886038774832-8bcqmt4c3gqngg33rll1392vl09ic0fo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZMbSJqyhL9u4JaBZCrSokuhg0pULYW7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886038774832-8bcqmt4c3gqngg33rll1392vl09ic0fo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
