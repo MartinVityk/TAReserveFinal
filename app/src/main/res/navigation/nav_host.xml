@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_host"
-    app:startDestination="@id/classSelection">
+    app:startDestination="@id/loginScreen">
 
     <fragment
         android:id="@+id/classSelection"
@@ -36,4 +36,55 @@
         android:name="com.example.tareservefinal.TaInfo"
         android:label="fragment_ta_info"
         tools:layout="@layout/fragment_ta_info" />
+    <fragment
+        android:id="@+id/loginScreen"
+        android:name="com.example.tareservefinal.LoginScreen"
+        android:label="fragment_login_screen"
+        tools:layout="@layout/fragment_login_screen" >
+        <action
+            android:id="@+id/action_loginScreen_to_studentLogin"
+            app:destination="@id/studentLogin" />
+        <action
+            android:id="@+id/action_loginScreen_to_taLogin"
+            app:destination="@id/taSignInButton" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentLogin"
+        android:name="com.example.tareservefinal.studentLogin"
+        android:label="fragment_student_login"
+        tools:layout="@layout/fragment_student_login" >
+        <action
+            android:id="@+id/action_studentLogin_to_classSelection"
+            app:destination="@id/classSelection" />
+        <action
+            android:id="@+id/action_studentLogin_to_studentRegister"
+            app:destination="@id/studentRegister" />
+    </fragment>
+    <fragment
+        android:id="@+id/taSignInButton"
+        android:name="com.example.tareservefinal.taLogin"
+        android:label="fragment_ta_login"
+        tools:layout="@layout/fragment_ta_login" >
+        <action
+            android:id="@+id/action_taLogin_to_classSelection"
+            app:destination="@id/classSelection" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentRegister"
+        android:name="com.example.tareservefinal.studentRegister"
+        android:label="fragment_student_register"
+        tools:layout="@layout/fragment_student_register" >
+        <action
+            android:id="@+id/action_studentRegister_to_registerSuccess"
+            app:destination="@id/registerSuccess" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerSuccess"
+        android:name="com.example.tareservefinal.registerSuccess"
+        android:label="fragment_register_success"
+        tools:layout="@layout/fragment_register_success" >
+        <action
+            android:id="@+id/action_registerSuccess_to_studentLogin"
+            app:destination="@id/studentLogin" />
+    </fragment>
 </navigation>
