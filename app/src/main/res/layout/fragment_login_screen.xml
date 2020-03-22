@@ -39,7 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/loginHeaderTextView" />
 
         <Button
-            android:id="@+id/taLoginButton"
+            android:id="@+id/taSignInButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"

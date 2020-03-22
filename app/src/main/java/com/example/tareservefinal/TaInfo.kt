@@ -68,7 +68,7 @@ class TaInfo : Fragment() {
                     }
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         numStudents = dataSnapshot.value.toString()
-                        print(dataSnapshot.value.toString()+"MISSINGO")
+                        //print(dataSnapshot.value.toString()+"MISSINGO")
                         studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
                     }
                 })

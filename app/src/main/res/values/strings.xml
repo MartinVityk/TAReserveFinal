@@ -4,4 +4,26 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="message_hint">Notification student will see</string>
+    <string name="no_student1">No Current Student</string>
+    <string name="no_student2">No Next Student</string>
+
+    <!-- Login Constants  -->
+    <string name="LoginPage">Login Page</string>
+    <string name="studentLogin">I am a Student</string>
+    <string name="taLogin">I am a Teaching Assistant</string>
+
+    <string name="studentLoginPage">Student Login</string>
+    <string name="studentEmailInputHint">Enter Email Here</string>
+    <string name="studentSignInButton">Sign In</string>
+    <string name="studentCreateAccButton">Create an Account</string>
+
+    <string name="studentRegisterPage">Student Register</string>
+    <string name="studentRegisterNameInputHint">Enter Name Here</string>
+    <string name="StudentRegisterButton">Create Account</string>
+
+    <string name="registerSuccess">Registration Successful</string>
+    <string name="returnToSignInButton">Press Here to Return to Sign In</string>
+
+    <string name="taLoginPage">TA Login</string>
+
 </resources>

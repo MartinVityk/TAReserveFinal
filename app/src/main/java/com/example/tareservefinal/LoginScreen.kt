@@ -27,7 +27,7 @@ class LoginScreen : Fragment() {
         val studentButton: Button = view.findViewById(R.id.studentLoginButton)
         studentButton.setOnClickListener { it.findNavController().navigate(R.id.action_loginScreen_to_studentLogin) }
 
-        val taButton: Button = view.findViewById(R.id.taLoginButton)
+        val taButton: Button = view.findViewById(R.id.taSignInButton)
         taButton.setOnClickListener { it.findNavController().navigate(R.id.action_loginScreen_to_taLogin) }
     }
 
