@@ -64,7 +64,7 @@ class TaSelection : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        val classRef = database.child("Classes").child(param1!!)
+        val classRef = database.child("Classes").child(param1!!.substring(0, param1!!.indexOf(" "))).child(param1!!)
             .child("TAList").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError) {
                 }

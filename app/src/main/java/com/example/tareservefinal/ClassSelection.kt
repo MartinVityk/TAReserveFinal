@@ -1,18 +1,24 @@
 package com.example.tareservefinal
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tareservefinal.util.HashCode
 import com.google.firebase.database.*
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,11 +64,31 @@ class ClassSelection : Fragment() {
         database = FirebaseDatabase.getInstance().reference
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.classListView)
+        val spinnerFind = view.findViewById<SearchableSpinner>(R.id.spinner_find)
+        val spinnerData:ArrayList<String> = ArrayList<String>()
+        var isFirstTimeClick = true
+
+        spinnerFind.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View, position: Int, id: Long) { // your code here
+                if(!isFirstTimeClick) {
+                    database.child("Users").child(model!!.userId).child("ClassList").child(HashCode().hashCode(spinnerData[position])).setValue(spinnerData[position])
+                    classArrayList.add(spinnerData[position])
+                    recyclerView.adapter!!.notifyDataSetChanged()
+                }
+                else
+                {
+                    isFirstTimeClick = false
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) { // your code here
+            }
+        })
+
 
         val adapter = MovieListAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-
 
         val classRef = database.child("Users").child(model!!.userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -87,12 +113,32 @@ class ClassSelection : Fragment() {
                 classArrayList.clear()
                 for(id in IdArrayList)
                 {
-                    classArrayList.add(dataSnapshot.child(id).child("Name").value.toString())
+                    if(id.contains(" "))
+                    classArrayList.add(dataSnapshot.child(id.substring(0, id.indexOf(" "))).child(id).key.toString())
                 }
                 adapter.setClasses(classArrayList)
             }
         })
         innerClassRef.run {  }
+
+
+
+        val spinnerRef = database.child("Classes")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        dataSnapshot.children.forEach {
+                            it.children.forEach { spinnerData.add(it.key.toString()) }
+                            val spinnerAdapt:ArrayAdapter<String> = ArrayAdapter(view.context, R.layout.support_simple_spinner_dropdown_item, spinnerData)
+                            spinnerFind.adapter = spinnerAdapt
+                        }
+                    }
+                })
+
+
+
+
 
 
     }
