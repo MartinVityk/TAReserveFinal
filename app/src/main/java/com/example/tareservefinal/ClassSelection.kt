@@ -16,6 +16,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tareservefinal.util.HashCode
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.database.*
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 
@@ -55,6 +56,7 @@ class ClassSelection : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 

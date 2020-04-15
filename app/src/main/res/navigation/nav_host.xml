@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_loginScreen_to_taLogin"
             app:destination="@id/taSignInButton" />
+        <action
+            android:id="@+id/action_loginScreen_to_classSelection"
+            app:destination="@id/classSelection" />
     </fragment>
     <fragment
         android:id="@+id/studentLogin"

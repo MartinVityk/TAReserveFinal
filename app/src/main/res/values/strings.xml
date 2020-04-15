@@ -6,6 +6,7 @@
     <string name="message_hint">Notification student will see</string>
     <string name="no_student1">No Current Student</string>
     <string name="no_student2">No Next Student</string>
+    <string name="server_client_id">886038774832-lja4e3reta073i1iup90qmo49aeeepuc.apps.googleusercontent.com</string>
 
     <!-- Login Constants  -->
     <string name="LoginPage">Login Page</string>
