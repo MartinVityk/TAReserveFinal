@@ -1,15 +1,18 @@
 package com.example.tareservefinal
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -109,6 +112,22 @@ class TaScreen : Fragment() {
                         dataSnapshot.children.forEach {
                             if(x == 0)
                             {
+                                database.child("Users").child(it.value.toString()).child("UserToken").addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                    }
+
+                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+
+                                        val message: RemoteMessage = RemoteMessage.Builder(it.value.toString())
+                                                .addData("score","850")
+                                                .addData("time","2:45")
+                                                .build()
+
+
+                                        val response = FirebaseMessaging.getInstance().send(message)
+                                    }
+                                })
                                 it.ref.removeValue()
                             }
                             x++
@@ -123,11 +142,13 @@ class TaScreen : Fragment() {
                 }
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     var numStud = dataSnapshot.child("NumStudents").value.toString().toInt()
+                    if(numStud > 0)
                     dataSnapshot.child("NumStudents").ref.setValue(numStud-1)
                 }
 
             })
         }
+
 
     }
 

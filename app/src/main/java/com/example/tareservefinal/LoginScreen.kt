@@ -91,6 +91,7 @@ class LoginScreen : Fragment() {
             studentRef.child("Name").setValue(account!!.displayName)
             studentRef.child("Email").setValue(account!!.email)
             studentRef.child("isTA").setValue("0")
+            studentRef.child("UserToken").setValue(model!!.userToken)
 
 
             view!!.findNavController().navigate(R.id.action_loginScreen_to_classSelection)

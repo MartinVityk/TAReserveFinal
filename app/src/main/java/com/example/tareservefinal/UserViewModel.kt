@@ -7,6 +7,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
     // TODO: Look to change this to private & move to 'User' Class Object
     var userId = "1160826215"
     var isTA = "0"
+    var userToken = "null"
 
     // Setter for userID
     fun setUserID(userID: String) {

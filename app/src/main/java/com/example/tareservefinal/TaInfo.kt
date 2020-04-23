@@ -59,9 +59,19 @@ class TaInfo : Fragment() {
             if(!queueUp.isChecked)
             {
                 studentRef.child("StudentList").child(model!!.userId).removeValue()
+                val classRef = studentRef.child("NumStudents").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var numStudents = dataSnapshot.value.toString()
+                        studentRef.child("NumStudents").setValue(numStudents.toInt()-1)
+                    }
+                })
             }
             else
             {
+
                 var numStudents = "v"
                 val classRef = studentRef.child("NumStudents").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -70,6 +80,7 @@ class TaInfo : Fragment() {
                         numStudents = dataSnapshot.value.toString()
                         //print(dataSnapshot.value.toString()+"MISSINGO")
                         studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
+                        studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
                     }
                 })
                 classRef.run {  }
