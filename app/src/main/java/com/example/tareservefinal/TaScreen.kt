@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
@@ -101,6 +102,11 @@ class TaScreen : Fragment() {
         database = FirebaseDatabase.getInstance().reference
         val userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
         updateText(currStudent, nextStudent, userRef)
+
+        val switchViewText = view.findViewById<TextView>(R.id.switchToStudentView)
+        switchViewText.setOnClickListener {
+            view.findNavController().navigate(R.id.action_taScreen_to_taImageSelection)
+        }
 
 
         takeNextStudent.setOnClickListener {

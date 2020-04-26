@@ -30,7 +30,11 @@
         android:id="@+id/taScreen"
         android:name="com.example.tareservefinal.TaScreen"
         android:label="fragment_ta_screen"
-        tools:layout="@layout/fragment_ta_screen" />
+        tools:layout="@layout/fragment_ta_screen" >
+        <action
+            android:id="@+id/action_taScreen_to_taImageSelection"
+            app:destination="@id/taImageSelection" />
+    </fragment>
     <fragment
         android:id="@+id/taInfo"
         android:name="com.example.tareservefinal.TaInfo"
@@ -90,4 +94,9 @@
             android:id="@+id/action_registerSuccess_to_studentLogin"
             app:destination="@id/studentLogin" />
     </fragment>
+    <fragment
+        android:id="@+id/taImageSelection"
+        android:name="com.example.tareservefinal.taImageSelection"
+        android:label="fragment_ta_image_selection"
+        tools:layout="@layout/fragment_ta_image_selection" />
 </navigation>
