@@ -1,15 +1,22 @@
 package com.example.tareservefinal
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +33,9 @@ class TaInfo : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var database: DatabaseReference
+
+    private lateinit var storage: FirebaseStorage
+    private lateinit var progressBar: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +63,7 @@ class TaInfo : Fragment() {
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
         database = FirebaseDatabase.getInstance().reference
         val studentRef = database.child("Users").child(param1!!).child("TAData")
+        progressBar = view.findViewById(R.id.taInfoProgressBar)
 
 
         queueUp.setOnClickListener{
@@ -97,6 +108,25 @@ class TaInfo : Fragment() {
                     taDesc.text = dataSnapshot.child("TAData").child("Description").value.toString()
                 }
             })
+
+        loadProfilePic(view)
+    }
+
+    private fun loadProfilePic(view: View) {
+        storage = Firebase.storage
+
+        val imageEndpoint = "gs://tareservefinal.appspot.com/" + param1!! + ".JPG"
+
+        val gsReference = storage.getReferenceFromUrl(imageEndpoint)
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 5
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bmp = BitmapFactory.decodeByteArray(it, 0, it.size)
+            val imageView = view.findViewById<ImageView>(R.id.taImage)
+            imageView.setImageBitmap(bmp)
+            progressBar.visibility = View.GONE
+        }.addOnFailureListener {
+            progressBar.visibility = View.GONE
+        }
     }
 
     companion object {

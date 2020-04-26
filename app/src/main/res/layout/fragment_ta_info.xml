@@ -8,9 +8,13 @@
     tools:context=".TaInfo">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/taImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="125dp"
+        android:maxHeight="125dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:layout_marginTop="37dp"
         android:src="@android:drawable/sym_def_app_icon"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +33,7 @@
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/taImage" />
 
     <TextView
         android:id="@+id/TaTimes"
@@ -66,4 +70,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TaDescript" />
+
+    <ProgressBar
+        android:id="@+id/taInfoProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
