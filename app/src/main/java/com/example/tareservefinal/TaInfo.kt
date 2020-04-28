@@ -75,8 +75,7 @@ class TaInfo : Fragment() {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var numStudents = dataSnapshot.value.toString()
-                        studentRef.child("NumStudents").setValue(numStudents.toInt()-1)
+                        studentRef.child("NumStudents").setValue(dataSnapshot.childrenCount)
                     }
                 })
             }
@@ -90,8 +89,8 @@ class TaInfo : Fragment() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         numStudents = dataSnapshot.value.toString()
                         //print(dataSnapshot.value.toString()+"MISSINGO")
-                        studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
-                        studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
+                        studentRef.child("StudentList").child(model!!.userId).setValue(dataSnapshot.childrenCount+1)
+                        studentRef.child("NumStudents").setValue(dataSnapshot.childrenCount)
                     }
                 })
                 classRef.run {  }

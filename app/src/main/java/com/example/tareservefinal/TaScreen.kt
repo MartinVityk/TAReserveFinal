@@ -47,7 +47,7 @@ class TaScreen : Fragment() {
         return inflater.inflate(R.layout.fragment_ta_screen, container, false)
     }
 
-    fun updateText(nextStudent:TextView, currStudent:TextView, ref:Query)
+    fun updateText(currStudent:TextView, ref:Query)
     {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
@@ -62,30 +62,12 @@ class TaScreen : Fragment() {
                                 override fun onCancelled(databaseError: DatabaseError) {
                                 }
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                    currStudent.text = "Current Student is: " + dataSnapshot.child("Name").value.toString()
+                                    currStudent.text = "You are serving: " + dataSnapshot.child("Name").value.toString()
                                 }
                             })
                     }
-                    if(x == 1)
-                    {
-                        database.child("Users").child(it.key!!)
-                            .addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                }
-                                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                    nextStudent.text = "Next Student is: " + dataSnapshot.child("Name").value.toString()
-                                }
-                            })
-                    }
+
                     x++
-                }
-                if(x==1)
-                {
-                    nextStudent.text = "No Next Student"
-                }
-                if(x==0)
-                {
-                    nextStudent.text = "No Students In Line"
                 }
             }
 
@@ -94,14 +76,14 @@ class TaScreen : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val currStudent = view.findViewById<TextView>(R.id.currStudent)
+
         val nextStudent = view.findViewById<TextView>(R.id.nextStudent)
         val takeNextStudent = view.findViewById<Button>(R.id.nextInLine)
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
         database = FirebaseDatabase.getInstance().reference
         val userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
-        updateText(currStudent, nextStudent, userRef)
+        updateText(nextStudent, userRef)
 
         val switchViewText = view.findViewById<TextView>(R.id.switchToStudentView)
         switchViewText.setOnClickListener {
@@ -115,6 +97,7 @@ class TaScreen : Fragment() {
                     }
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         var x = 0
+
                         dataSnapshot.children.forEach {
                             if(x == 0)
                             {
@@ -138,7 +121,7 @@ class TaScreen : Fragment() {
                             }
                             x++
                         }
-                        updateText(currStudent, nextStudent, userRef)
+                        updateText(nextStudent, userRef)
                     }
 
                 })
