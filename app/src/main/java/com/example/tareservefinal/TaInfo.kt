@@ -69,14 +69,17 @@ class TaInfo : Fragment() {
         queueUp.setOnClickListener{
             if(!queueUp.isChecked)
             {
-                studentRef.child("StudentList").child(model!!.userId).removeValue()
-                val classRef = studentRef.child("NumStudents").addListenerForSingleValueEvent(object : ValueEventListener {
+                print("WHATTT")
+                val classRef = studentRef.child("StudentList").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         var numStudents = dataSnapshot.value.toString()
-                        studentRef.child("NumStudents").setValue(numStudents.toInt()-1)
+                        print(dataSnapshot.childrenCount.toString()+ "HEREEE")
+                        studentRef.child("StudentList").child(model!!.userId).removeValue()
+                        if(dataSnapshot.childrenCount == 1.toLong())
+                            studentRef.child("NumStudents").setValue(0)
                     }
                 })
             }

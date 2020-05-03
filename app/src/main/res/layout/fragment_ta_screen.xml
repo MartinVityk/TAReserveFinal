@@ -9,27 +9,17 @@
 
     <TextView
         android:id="@+id/nextStudent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="331dp"
+        android:layout_height="104dp"
         android:layout_marginStart="173dp"
-        android:layout_marginTop="25dp"
         android:layout_marginEnd="173dp"
+        android:gravity="center"
         android:text="@string/no_student2"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switchToStudentView" />
-
-    <TextView
-        android:id="@+id/currStudent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="173dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="173dp"
-        android:text="@string/no_student1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nextStudent" />
 
     <ToggleButton
         android:id="@+id/startSession"
@@ -38,7 +28,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="40dp"
-        android:text="taPresent"
+        android:text="@string/hours_start"
+        android:textOff="@string/hours_start"
+        android:textOn="@string/hours_work"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -46,25 +38,24 @@
     <Button
         android:id="@+id/nextInLine"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="80dp"
-        android:text="Button"
+        android:layout_height="0dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/next_student"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currStudent" />
+        app:layout_constraintTop_toBottomOf="@+id/nextStudent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_height="210dp"
         app:layout_constraintBottom_toTopOf="@+id/startSession"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nextInLine">
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

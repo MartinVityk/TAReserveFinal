@@ -1,9 +1,7 @@
 package com.example.tareservefinal
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
@@ -16,7 +14,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tareservefinal.util.HashCode
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.database.*
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 
@@ -41,6 +38,7 @@ class ClassSelection : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -56,7 +54,6 @@ class ClassSelection : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 
@@ -123,8 +120,6 @@ class ClassSelection : Fragment() {
         })
         innerClassRef.run {  }
 
-
-
         val spinnerRef = database.child("Classes")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -143,6 +138,22 @@ class ClassSelection : Fragment() {
 
 
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.findItem(R.id.logout).isVisible = true
+        menu.findItem(R.id.edit_classes).isVisible = true
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.logout -> view!!.findNavController().navigate(
+                R.id.action_classSelection_to_loginScreen)
+        }
+
+        return false
     }
 
     inner class MovieListAdapter():
