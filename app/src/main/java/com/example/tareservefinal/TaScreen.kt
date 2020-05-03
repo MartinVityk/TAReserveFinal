@@ -69,6 +69,10 @@ class TaScreen : Fragment() {
 
                     x++
                 }
+                if(x == 0)
+                {
+                    currStudent.text = "No Students in Line!"
+                }
             }
 
         })
@@ -82,7 +86,7 @@ class TaScreen : Fragment() {
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
         database = FirebaseDatabase.getInstance().reference
-        val userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
+        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
         updateText(nextStudent, userRef)
 
         val switchViewText = view.findViewById<TextView>(R.id.switchToStudentView)
@@ -115,13 +119,21 @@ class TaScreen : Fragment() {
 
 
                                         val response = FirebaseMessaging.getInstance().send(message)
+
                                     }
                                 })
                                 it.ref.removeValue()
+                                //userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
+                                updateText(nextStudent, userRef)
+                            }
+                            else if (x == 1)
+                            {
+                                updateText(nextStudent, userRef)
                             }
                             x++
                         }
-                        updateText(nextStudent, userRef)
+
+
                     }
 
                 })
@@ -131,11 +143,13 @@ class TaScreen : Fragment() {
                 }
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     var numStud = dataSnapshot.child("NumStudents").value.toString().toInt()
+
                     if(numStud > 0)
                     dataSnapshot.child("NumStudents").ref.setValue(numStud-1)
                 }
 
             })
+
         }
 
 
