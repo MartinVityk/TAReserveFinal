@@ -88,6 +88,7 @@ class LoginScreen : Fragment() {
             model!!.setIsTA("0")
 
             val studentRef = database.child("Users").child(hashCode)
+            studentRef.keepSynced(true)
             studentRef.child("Name").setValue(account!!.displayName)
             studentRef.child("Email").setValue(account!!.email)
             studentRef.child("isTA").setValue("0")

@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_classSelection_to_taScreen"
             app:destination="@id/taScreen" />
+        <action
+            android:id="@+id/action_classSelection_to_loginScreen"
+            app:destination="@id/loginScreen" />
     </fragment>
     <fragment
         android:id="@+id/taSelection"
