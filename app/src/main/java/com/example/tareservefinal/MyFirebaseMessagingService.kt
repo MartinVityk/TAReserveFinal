@@ -1,33 +1,50 @@
 package com.example.tareservefinal
 
 import android.R
+import android.app.ActivityManager
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.PendingIntent.getActivity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 
-class MyFirebaseMessagingService : FirebaseMessagingService(){
+class MyFirebaseMessagingService(myModel: UserViewModel) : FirebaseMessagingService(){
+
+    var model:UserViewModel? = null
+
+    init{
+        model = myModel
+    }
+
+
 
     override fun onMessageReceived(p0: RemoteMessage) {
         super.onMessageReceived(p0)
         println("JIM" + p0.data.get("body")+ p0.data.get("title"))
         val notificationIntent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            flags = Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
         }
 
 
         if(p0.data.get("title").equals("It is your turn!"))
         {
             notificationIntent.putExtra("timerStart", 0)
+            //val model = (this?.let { ViewModelProvider(this as FragmentActivity)[UserViewModel::class.java]}
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent("START_TIMER"))
+            println("JOE"+model!!.userId)
         }
         else
         {
+            println("JOE3")
             notificationIntent.putExtra("acceptStart", 0)
         }
 
@@ -45,6 +62,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(0, notificationBuilder.build())
+
     }
 
 

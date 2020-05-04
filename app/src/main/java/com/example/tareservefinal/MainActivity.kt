@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
 
         val model = this?.let { ViewModelProvider(this as FragmentActivity)[UserViewModel::class.java]}
-        //MyFirebaseMessagingService(model.userId)
+        MyFirebaseMessagingService(model)
+        //ViewModelProvider(XXX)
+
         val database = FirebaseDatabase.getInstance().reference
         val account = GoogleSignIn.getLastSignedInAccount(this)
         setContentView(R.layout.activity_main)
