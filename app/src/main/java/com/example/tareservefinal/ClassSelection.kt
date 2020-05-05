@@ -149,6 +149,10 @@ class ClassSelection : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            R.id.edit_classes -> {
+                view!!.findNavController().navigate(R.id.action_classSelection_to_classRemoval)
+            }
+
             R.id.logout -> view!!.findNavController().navigate(
                 R.id.action_classSelection_to_loginScreen)
         }
