@@ -32,7 +32,6 @@ class ClassSelection : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var constantAdapter = MovieListAdapter()
     private lateinit var database: DatabaseReference
 
 
@@ -64,15 +63,39 @@ class ClassSelection : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.classListView)
         val spinnerFind = view.findViewById<SearchableSpinner>(R.id.spinner_find)
-        val spinnerData:ArrayList<String> = ArrayList<String>()
+        val spinnerData:ArrayList<String> = ArrayList()
         var isFirstTimeClick = true
+
+        val adapter = ClassListAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
 
         spinnerFind.setOnItemSelectedListener(object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View, position: Int, id: Long) { // your code here
                 if(!isFirstTimeClick) {
                     database.child("Users").child(model!!.userId).child("ClassList").child(HashCode().hashCode(spinnerData[position])).setValue(spinnerData[position])
-                    classArrayList.add(spinnerData[position])
-                    recyclerView.adapter!!.notifyDataSetChanged()
+                    database.child("Users").child(model!!.userId)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(databaseError: DatabaseError) {
+                            }
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                model!!.isTA = dataSnapshot.child("isTA").value.toString()
+                                IdArrayList.clear()
+                                dataSnapshot.child("ClassList").children.forEach {
+                                    IdArrayList.add(it.value.toString())
+                                }
+                                adapter.setIdArray(IdArrayList)
+
+                                classArrayList.clear()
+                                for(id in IdArrayList)
+                                {
+                                    if(id.contains(" "))
+                                        classArrayList.add(dataSnapshot.child(id.substring(0, id.indexOf(" "))).child(id).key.toString())
+                                }
+                                adapter.setClasses(classArrayList)
+                            }
+                        })
+                    database.run {  }
                 }
                 else
                 {
@@ -84,11 +107,6 @@ class ClassSelection : Fragment() {
             }
         })
 
-
-        val adapter = MovieListAdapter()
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-
         val classRef = database.child("Users").child(model!!.userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -96,7 +114,7 @@ class ClassSelection : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     model!!.isTA = dataSnapshot.child("isTA").value.toString()
                     IdArrayList.clear()
-                        dataSnapshot.child("ClassList").children.forEach {
+                    dataSnapshot.child("ClassList").children.forEach {
                         IdArrayList.add(it.value.toString())
                     }
                     adapter.setIdArray(IdArrayList)
@@ -120,7 +138,7 @@ class ClassSelection : Fragment() {
         })
         innerClassRef.run {  }
 
-        val spinnerRef = database.child("Classes")
+        database.child("Classes")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
                     }
@@ -132,12 +150,6 @@ class ClassSelection : Fragment() {
                         }
                     }
                 })
-
-
-
-
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -160,8 +172,8 @@ class ClassSelection : Fragment() {
         return false
     }
 
-    inner class MovieListAdapter():
-        RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>(){
+    inner class ClassListAdapter:
+        RecyclerView.Adapter<ClassListAdapter.ClassViewHolder>(){
         private var classes = emptyList<String>()
         private var idArray = emptyList<String>()
 
@@ -179,17 +191,18 @@ class ClassSelection : Fragment() {
         fun setIdArray(idArray: List<String>)
         {
             this.idArray = idArray
+            notifyDataSetChanged()
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClassViewHolder {
 
 
             val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_card_view, parent, false)
-            return MovieViewHolder(v)
+            return ClassViewHolder(v)
         }
 
-        override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: ClassViewHolder, position: Int) {
 
             holder.view.findViewById<TextView>(R.id.itemName).text=classes[position]
 
@@ -205,7 +218,7 @@ class ClassSelection : Fragment() {
             }
             else
             {
-                holder.itemView.setOnClickListener() {
+                holder.itemView.setOnClickListener {
                     it.findNavController().navigate(
                         R.id.action_classSelection_to_taScreen,
                         bundleOf("param1" to idArray[position])
@@ -216,7 +229,7 @@ class ClassSelection : Fragment() {
         }
 
 
-        inner class MovieViewHolder(val view: View): RecyclerView.ViewHolder(view), View.OnClickListener{
+        inner class ClassViewHolder(val view: View): RecyclerView.ViewHolder(view), View.OnClickListener{
             override fun onClick(view: View?){
 
                 if (view != null) {
