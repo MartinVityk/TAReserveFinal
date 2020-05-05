@@ -20,11 +20,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.example.tareservefinal.util.HashCode
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.FirebaseDatabase
@@ -50,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         val database = FirebaseDatabase.getInstance().reference
         val account = GoogleSignIn.getLastSignedInAccount(this)
+
         setContentView(R.layout.activity_main)
         val navHostFragment = fragment as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
@@ -67,6 +71,9 @@ class MainActivity : AppCompatActivity() {
         if(account != null) {
             println("BOB")
             graph.startDestination = R.id.classSelection
+            val hashCode = HashCode().hashCode(account!!.email!!)
+            model?.setUserID(hashCode)
+            supportActionBar?.setTitle(account.displayName)
         }
         else
         {
@@ -166,5 +173,11 @@ class MainActivity : AppCompatActivity() {
             timerDialog!!.findViewById<TextView>(R.id.timerTime).text = checkSecs.toString()
         })
 
+    }
+
+    fun removeAllFragments(fragmentManager2:FragmentManager) {
+        while (fragmentManager2.backStackEntryCount > 0) {
+            fragmentManager2.popBackStack();
+        }
     }
 }

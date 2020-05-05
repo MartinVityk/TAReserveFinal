@@ -46,6 +46,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.1.5'
     //implementation 'com.google.firebase:firebase-messaging:20.1.5'
+    // Java language implementation
+    implementation "androidx.fragment:fragment:1.2.4"
+    // Kotlin
+    implementation "androidx.fragment:fragment-ktx:1.2.4"
+
 
     // Firebase storage
     implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'

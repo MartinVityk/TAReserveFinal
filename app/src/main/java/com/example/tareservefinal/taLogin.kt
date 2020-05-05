@@ -34,6 +34,7 @@ class taLogin : Fragment() {
 
     // Handle Sign-In Logic
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //(activity as MainActivity).removeAllFragments(FragmentActivity.)
         emailEditText = view.findViewById(R.id.taLoginEmailEditText)
         database = FirebaseDatabase.getInstance().reference
 

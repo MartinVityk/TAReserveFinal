@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.findFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.tareservefinal.util.HashCode
@@ -42,6 +44,7 @@ class LoginScreen : Fragment() {
     // Setup button onClick() to control navigation
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val studentButton: Button = view.findViewById(R.id.studentLoginButton)
+
         database = FirebaseDatabase.getInstance().reference
         studentButton.setOnClickListener { it.findNavController().navigate(R.id.action_loginScreen_to_studentLogin) }
 
@@ -53,7 +56,8 @@ class LoginScreen : Fragment() {
                 .requestEmail()
                 .build()
 
-        val mGoogleSignInClient = GoogleSignIn.getClient(activity!!, gso);
+        val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
 
         view.findViewById<SignInButton>(R.id.sign_in_button).setOnClickListener{
             val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
@@ -63,9 +67,15 @@ class LoginScreen : Fragment() {
             var resultCode = 1
 
             onActivityResult(1, resultCode, signInIntent)
-            val account = GoogleSignIn.getLastSignedInAccount(activity!!)
+            val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
             println("HELLO"+ account.toString())
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //println("VIM"+(activity as MainActivity).supportFragmentManager)
 
     }
 
@@ -95,7 +105,7 @@ class LoginScreen : Fragment() {
             studentRef.child("UserToken").setValue(model!!.userToken)
 
 
-            view!!.findNavController().navigate(R.id.action_loginScreen_to_classSelection)
+            requireView().findNavController().navigate(R.id.action_loginScreen_to_classSelection)
             // Signed in successfully, show authenticated UI.
 
         } catch (e: ApiException) { // The ApiException status code indicates the detailed failure reason.

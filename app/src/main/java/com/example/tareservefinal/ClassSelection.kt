@@ -14,6 +14,9 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tareservefinal.util.HashCode
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.*
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 
@@ -55,6 +58,7 @@ class ClassSelection : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+
 
         super.onViewCreated(view, savedInstanceState)
         val IdArrayList = ArrayList<String>()
@@ -162,11 +166,20 @@ class ClassSelection : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.edit_classes -> {
-                view!!.findNavController().navigate(R.id.action_classSelection_to_classRemoval)
+                requireView().findNavController().navigate(R.id.action_classSelection_to_classRemoval)
             }
 
-            R.id.logout -> view!!.findNavController().navigate(
-                R.id.action_classSelection_to_loginScreen)
+            R.id.logout -> {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestServerAuthCode("886038774832-lja4e3reta073i1iup90qmo49aeeepuc.apps.googleusercontent.com")
+                        .requestEmail()
+                        .build()
+                GoogleSignIn.getClient(requireActivity(), gso).signOut()
+                        .addOnCompleteListener(requireActivity(), OnCompleteListener<Void?> {
+                            requireView().findNavController().navigate(
+                                    R.id.action_classSelection_to_loginScreen)
+                        })
+            }
         }
 
         return false

@@ -42,12 +42,13 @@ class classRemoval : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         count = 0
 
         model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 
         cancelButton = view.findViewById(R.id.cancelCourseRemovalButton)
-        cancelButton.setOnClickListener { view.findNavController().navigate(R.id.action_classRemoval_to_classSelection) }
+        cancelButton.setOnClickListener { view.findNavController().popBackStack() }
 
         deleteButton = view.findViewById(R.id.deleteCourseButton)
         deleteButton.isEnabled = false
@@ -111,7 +112,7 @@ class classRemoval : Fragment() {
                     query.removeValue()
                 }
             }
-            view.findNavController().navigate(R.id.action_classRemoval_to_classSelection)
+            view.findNavController().popBackStack()
         }
     }
 
