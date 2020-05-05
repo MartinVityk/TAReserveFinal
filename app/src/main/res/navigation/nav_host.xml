@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_classSelection_to_loginScreen"
             app:destination="@id/loginScreen" />
+        <action
+            android:id="@+id/action_classSelection_to_classRemoval"
+            app:destination="@id/classRemoval" />
     </fragment>
     <fragment
         android:id="@+id/taSelection"
@@ -102,4 +105,13 @@
         android:name="com.example.tareservefinal.taImageSelection"
         android:label="fragment_ta_image_selection"
         tools:layout="@layout/fragment_ta_image_selection" />
+    <fragment
+        android:id="@+id/classRemoval"
+        android:name="com.example.tareservefinal.classRemoval"
+        android:label="fragment_class_removal"
+        tools:layout="@layout/fragment_class_removal" >
+        <action
+            android:id="@+id/action_classRemoval_to_classSelection"
+            app:destination="@id/classSelection" />
+    </fragment>
 </navigation>

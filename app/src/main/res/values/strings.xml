@@ -43,4 +43,9 @@
     <string name="loading">Loading...</string>
     <string name="setNewImageButton">Upload Image</string>
 
+    <!-- Remove Class Constants -->
+    <string name="removeClassText">Remove Courses</string>
+    <string name="removeClassButton">Delete</string>
+    <string name="cancelRemoveClassButton">Cancel</string>
+
 </resources>
