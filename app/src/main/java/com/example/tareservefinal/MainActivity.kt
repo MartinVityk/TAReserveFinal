@@ -1,20 +1,27 @@
 package com.example.tareservefinal
 
+import android.app.Dialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -27,13 +34,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    var timerCompletionReceiver: TimerBroadcastReciever? = null
+    var model: UserViewModel? = null
+    var timerDialog: Dialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
 
-        val model = this?.let { ViewModelProvider(this as FragmentActivity)[UserViewModel::class.java]}
-        MyFirebaseMessagingService(model)
+        timerDialog = Dialog(this)
+        model = this?.let { ViewModelProvider(this as FragmentActivity)[UserViewModel::class.java]}
+        //MyFirebaseMessagingService(this)
         //ViewModelProvider(XXX)
+
 
         val database = FirebaseDatabase.getInstance().reference
         val account = GoogleSignIn.getLastSignedInAccount(this)
@@ -81,8 +94,14 @@ class MainActivity : AppCompatActivity() {
                     //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 })
 
+        timerCompletionReceiver = TimerBroadcastReciever(this)
+        registerReceiver(timerCompletionReceiver!!, IntentFilter("START_TIMER"))
+    }
 
 
+    override fun onDestroy() {
+        unregisterReceiver(timerCompletionReceiver!!)
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -100,6 +119,10 @@ class MainActivity : AppCompatActivity() {
         //}
         return super.onOptionsItemSelected(item)
     }
+    fun outputModel():UserViewModel
+    {
+        return model!!
+    }
 
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -116,5 +139,32 @@ class MainActivity : AppCompatActivity() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    fun showTimer()
+    {
+        timerDialog!!.setContentView(R.layout.timer_pop_up)
+        timerDialog!!.show()
+        timerDialog!!.findViewById<Button>(R.id.declineButton).setOnClickListener {
+            model!!.reset()
+            timerDialog!!.dismiss()
+        }
+        timerDialog!!.findViewById<Button>(R.id.acceptButton).setOnClickListener {
+            model!!.reset()
+            timerDialog!!.dismiss()
+        }
+        model!!.startStop()
+
+        model?.getTimeString()?.observe(this, androidx.lifecycle.Observer<Long> { time ->
+            var checkSecs = 60-time
+
+            if(checkSecs == (-1).toLong())
+            {
+                model!!.reset()
+                timerDialog!!.dismiss()
+            }
+            timerDialog!!.findViewById<TextView>(R.id.timerTime).text = checkSecs.toString()
+        })
+
     }
 }

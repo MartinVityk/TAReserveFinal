@@ -17,13 +17,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 
-class MyFirebaseMessagingService(myModel: UserViewModel) : FirebaseMessagingService(){
+class MyFirebaseMessagingService() : FirebaseMessagingService(){
 
-    var model:UserViewModel? = null
 
-    init{
-        model = myModel
-    }
 
 
 
@@ -37,10 +33,12 @@ class MyFirebaseMessagingService(myModel: UserViewModel) : FirebaseMessagingServ
 
         if(p0.data.get("title").equals("It is your turn!"))
         {
+            println("DOE")
             notificationIntent.putExtra("timerStart", 0)
             //val model = (this?.let { ViewModelProvider(this as FragmentActivity)[UserViewModel::class.java]}
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent("START_TIMER"))
-            println("JOE"+model!!.userId)
+            //LocalBroadcastManager.getInstance(this).sendBroadcast(Intent("START_TIMER"))
+            sendBroadcast(Intent("START_TIMER"))
+
         }
         else
         {
