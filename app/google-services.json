@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "886038774832-us51q27ko9viv13urb5jdqekbq143nv2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tareservefinal",
+            "certificate_hash": "4c34a53044b1db8c95145786e1cb8ed60b9e2a5d"
+          }
+        },
+        {
           "client_id": "886038774832-8bcqmt4c3gqngg33rll1392vl09ic0fo.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "886038774832-8bcqmt4c3gqngg33rll1392vl09ic0fo.apps.googleusercontent.com",
+              "client_id": "886038774832-lja4e3reta073i1iup90qmo49aeeepuc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

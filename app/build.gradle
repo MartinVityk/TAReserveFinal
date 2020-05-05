@@ -4,8 +4,23 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\Francis Nguyen\\Desktop\\TASK_PushNotifications\\KeystoreTest\\file.keystore')
+            storePassword 'Qwerty123'
+            keyAlias = 'testKeyStoreFinal'
+            keyPassword 'Qwerty123'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 
     defaultConfig {
         applicationId "com.example.tareservefinal"
@@ -21,6 +36,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable = true
         }
     }
 

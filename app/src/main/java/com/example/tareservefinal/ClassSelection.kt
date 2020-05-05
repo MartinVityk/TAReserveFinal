@@ -94,7 +94,7 @@ class ClassSelection : Fragment() {
                 override fun onCancelled(databaseError: DatabaseError) {
                 }
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    model!!.isTA = dataSnapshot.child("isTA").value.toString()
+                    model.isTA = dataSnapshot.child("isTA").value.toString()
                     IdArrayList.clear()
                         dataSnapshot.child("ClassList").children.forEach {
                         IdArrayList.add(it.value.toString())
@@ -120,6 +120,7 @@ class ClassSelection : Fragment() {
         })
         innerClassRef.run {  }
 
+        /*
         val spinnerRef = database.child("Classes")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -132,6 +133,7 @@ class ClassSelection : Fragment() {
                         }
                     }
                 })
+         */
 
 
 
