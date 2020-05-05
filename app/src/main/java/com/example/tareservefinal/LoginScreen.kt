@@ -45,6 +45,7 @@ class LoginScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val studentButton: Button = view.findViewById(R.id.studentLoginButton)
 
+        (activity as MainActivity).supportActionBar?.setTitle("")
         database = FirebaseDatabase.getInstance().reference
         studentButton.setOnClickListener { it.findNavController().navigate(R.id.action_loginScreen_to_studentLogin) }
 

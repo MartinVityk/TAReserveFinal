@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             graph.startDestination = R.id.classSelection
             val hashCode = HashCode().hashCode(account!!.email!!)
             model?.setUserID(hashCode)
-            supportActionBar?.setTitle(account.displayName)
+
         }
         else
         {

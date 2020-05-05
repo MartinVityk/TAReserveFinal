@@ -65,6 +65,16 @@ class TaInfo : Fragment() {
         val studentRef = database.child("Users").child(param1!!).child("TAData")
         progressBar = view.findViewById(R.id.taInfoProgressBar)
 
+        studentRef.child("StudentList").addValueEventListener(
+                object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        queueUp.isChecked = dataSnapshot.child(model!!.userId).exists()
+                    }
+                }
+        )
 
         queueUp.setOnClickListener{
             if(!queueUp.isChecked)

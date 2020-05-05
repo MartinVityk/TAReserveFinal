@@ -95,6 +95,37 @@ class TaScreen : Fragment() {
         }
 
 
+        userRef.addValueEventListener(
+                object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var x = 0
+                        println("BILL"+dataSnapshot.value.toString())
+                        dataSnapshot.children.forEach {
+                            if(x == 0)
+                            {
+                                println("BIL"+it.value.toString())
+                                database.child("Users").child(it.key.toString()).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                    }
+
+                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                        nextStudent.text = dataSnapshot.value.toString()
+                                    }
+                                })
+                                x++
+                            }
+                        }
+                        if(x == 0)
+                        {
+                            nextStudent.text = "No Students in Line!"
+                        }
+                    }
+                }
+        )
+
         takeNextStudent.setOnClickListener {
             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {

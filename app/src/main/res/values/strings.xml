@@ -8,6 +8,8 @@
     <string name="wait_message">Your TA is waiting!!</string>
     <string name="Accept">Accept</string>
     <string name="wait_time">60</string>
+    <string name="enter_line">GET IN LINE</string>
+    <string name="exit_line">YOUR ARE IN LINE</string>
     <string name="Decline">Decline</string>
     <string name="no_student2">No Students in Line!</string>
     <string name="hours_start">Start Your Hours</string>

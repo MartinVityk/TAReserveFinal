@@ -59,6 +59,7 @@ class ClassSelection : Fragment() {
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 
+        (activity as MainActivity).supportActionBar?.setTitle(GoogleSignIn.getLastSignedInAccount(activity)?.displayName)
 
         super.onViewCreated(view, savedInstanceState)
         val IdArrayList = ArrayList<String>()
