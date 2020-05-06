@@ -55,6 +55,10 @@
 
     <!-- TA View Constants -->
     <string name="seeImageView">Press here to see/change your profile pic</string>
+    <string name="scheduleMsgHint">Enter your Office Hours here</string>
+    <string name="scheduleButtonText">Update Office Hours</string>
+    <string name="descriptionMsgHint">Enter your Location here</string>
+    <string name="descriptionButtonText">Update Location</string>
 
     <!-- TA Image Constants -->
     <string name="taImageSelectionText">TA Image Selection</string>

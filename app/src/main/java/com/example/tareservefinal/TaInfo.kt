@@ -165,6 +165,17 @@ class TaInfo : Fragment() {
                 }
             })
 
+        database.child("Users").child(param1!!).child("TAData").child("Schedule")
+            .addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val officeString = dataSnapshot.value.toString()
+                    taTime.text = "Office Hours: $officeString"
+                }
+            })
+
         loadProfilePic(view)
     }
 
