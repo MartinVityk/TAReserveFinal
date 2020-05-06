@@ -57,39 +57,21 @@ class TaScreen : Fragment() {
         return inflater.inflate(R.layout.fragment_ta_screen, container, false)
     }
 
-    private fun updateText(currStudent:TextView, nextStudent:TextView, ref:Query)
+    private fun updateText( nextStudent:TextView,currStudent:TextView, ref:Query)
     {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var x = 0
-                dataSnapshot.children.forEach {
-                    if(x == 0)
-                    {
-                        model!!.studentServe = it.key.toString()
-                        database.child("Users").child(it.key!!)
-                            .addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                }
-                                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                    //currStudent.text = "Serving: " + dataSnapshot.child("Name").value.toString()
 
-                                }
-                            })
-                    }
-
-                    x++
-                }
-                if(x == 0)
+                if(dataSnapshot.childrenCount.toInt() == 0)
                 {
-                    currStudent.text = "No Students in Line!"
+                    nextStudent.text = "No Students in Line!"
 
                 }
                 else
                 {
-                    currStudent.text = ""+x+" Students in Line"
-                    nextStudent
+                    nextStudent.text = ""+dataSnapshot.childrenCount+" Students in Line"
                 }
                 if(model!!.studentServe !="null") {
                     database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -102,7 +84,7 @@ class TaScreen : Fragment() {
                     })
                 }
                 else {
-                    nextStudent.text = ""
+                    currStudent.text = ""
                 }
             }
 
