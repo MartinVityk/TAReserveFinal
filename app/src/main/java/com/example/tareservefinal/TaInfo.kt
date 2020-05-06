@@ -156,9 +156,12 @@ class TaInfo : Fragment() {
                 override fun onCancelled(databaseError: DatabaseError) {
                 }
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val taTimeString = dataSnapshot.child("TAData").child("Schedule").value.toString()
+                    val taDescString = dataSnapshot.child("TAData").child("Description").value.toString()
+
                     taName.text = dataSnapshot.child("Name").value.toString()
-                    taTime.text = dataSnapshot.child("TAData").child("Schedule").value.toString()
-                    taDesc.text = dataSnapshot.child("TAData").child("Description").value.toString()
+                    taTime.text = "Office Hours: $taTimeString"
+                    taDesc.text = "Note: $taDescString"
                 }
             })
 
