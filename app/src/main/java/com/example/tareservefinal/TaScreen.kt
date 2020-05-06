@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
@@ -30,6 +32,11 @@ class TaScreen : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var database: DatabaseReference
+
+    private lateinit var officeHoursText: EditText
+    private lateinit var locationText: EditText
+    private lateinit var officeHoursButton: Button
+    private lateinit var locationButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +90,11 @@ class TaScreen : Fragment() {
 
         val nextStudent = view.findViewById<TextView>(R.id.nextStudent)
         val takeNextStudent = view.findViewById<Button>(R.id.nextInLine)
+        officeHoursButton = view.findViewById(R.id.officeHourUpdateButton)
+        officeHoursText = view.findViewById(R.id.officeHoursEditText)
+        locationButton = view.findViewById(R.id.locationButton)
+        locationText = view.findViewById(R.id.locationEditText)
+
 
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
         database = FirebaseDatabase.getInstance().reference
@@ -112,7 +124,7 @@ class TaScreen : Fragment() {
                                     }
 
                                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                        nextStudent.text = dataSnapshot.value.toString()
+                                        nextStudent.text = "You are serving: " + dataSnapshot.value.toString()
                                     }
                                 })
                                 x++
@@ -183,7 +195,45 @@ class TaScreen : Fragment() {
 
         }
 
+        setupOfficeHours()
+        setupLocation()
 
+    }
+
+    private fun setupOfficeHours() {
+        val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+
+        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("Schedule")
+
+        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                officeHoursText.setText(dataSnapshot.value.toString())
+            }
+        })
+
+        officeHoursButton.setOnClickListener {
+            userRef.setValue(officeHoursText.text.toString())
+        }
+    }
+
+    private fun setupLocation() {
+        val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+
+        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("Description")
+
+        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                locationText.setText(dataSnapshot.value.toString())
+            }
+        })
+
+        locationButton.setOnClickListener {
+            userRef.setValue(locationText.text.toString())
+        }
     }
 
     companion object {
