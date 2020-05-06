@@ -4,6 +4,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        config {
+            storeFile file('C:\\Users\\Francis Nguyen\\Desktop\\projectDemo\\TAReserveFinal\\app\\KeystoreTest\\file.keystore')
+            storePassword 'Qwerty123'
+            keyAlias = 'testKeyStoreFinal'
+            keyPassword 'Qwerty123'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -21,6 +29,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 
