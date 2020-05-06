@@ -69,18 +69,19 @@ class TaInfo : Fragment() {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        queueUp.isChecked = dataSnapshot.child(model!!.userId).exists()
-                        if(queueUp.isChecked)
+                        val queued:Boolean = dataSnapshot.child(model!!.userId).exists()
+                        if(queued)
                         {
                             var x = 1
                             dataSnapshot.children.forEach {
                                 if(it.key == model!!.userId)
                                 {
-                                    queueUp.text = "You are number "+ x+" in line"
+                                    queueUp.textOn = "You are number $x in line"
                                 }
                                 x++
                             }
                         }
+                        queueUp.isChecked = queued
                     }
                 }
         )
@@ -88,25 +89,22 @@ class TaInfo : Fragment() {
         queueUp.setOnClickListener{
             if(!queueUp.isChecked)
             {
-                print("WHATTT")
-                val classRef = studentRef.child("StudentList").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(databaseError: DatabaseError) {
-                    }
+                queueUp.isChecked = true
+                studentRef.child("StudentList").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {}
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                         val confirmDialog = Dialog(context!!)
                         confirmDialog.setContentView(R.layout.confirm_pop_up)
                         confirmDialog.show()
                         confirmDialog.findViewById<TextView>(R.id.confirmText2).text = "Are you sure you want to leave this TA line?"
-                        confirmDialog.findViewById<TextView>(R.id.lineText).text = "He will miss you :("
+                        confirmDialog.findViewById<TextView>(R.id.lineText).text = ""
                         confirmDialog.findViewById<Button>(R.id.confirmYes).setOnClickListener {
-                            var numStudents = dataSnapshot.value.toString()
-                            print(dataSnapshot.childrenCount.toString()+ "HEREEE")
                             studentRef.child("StudentList").child(model!!.userId).removeValue()
                             if(dataSnapshot.childrenCount == 1.toLong())
                                 studentRef.child("NumStudents").setValue(0)
                             confirmDialog.dismiss()
+                            queueUp.isChecked = false
                         }
                         confirmDialog.findViewById<Button>(R.id.confirmNo).setOnClickListener {
                             confirmDialog.dismiss()
@@ -121,23 +119,23 @@ class TaInfo : Fragment() {
             }
             else
             {
-
-                var numStudents = "v"
+                queueUp.isChecked = false
                 val classRef = studentRef.child("NumStudents").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(databaseError: DatabaseError) {
-                    }
+                    override fun onCancelled(databaseError: DatabaseError) {}
+
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        numStudents = dataSnapshot.value.toString()
-                        //print(dataSnapshot.value.toString()+"MISSINGO")
+                        var numStudents = dataSnapshot.value.toString()
+                        val lineText = "You will be position number " + (numStudents.toInt() + 1) + " in line"
                         val confirmDialog = Dialog(context!!)
                         confirmDialog.setContentView(R.layout.confirm_pop_up)
                         confirmDialog.show()
-                        confirmDialog.findViewById<TextView>(R.id.lineText).text = "You will be position number "+numStudents+" in line"
+                        confirmDialog.findViewById<TextView>(R.id.lineText).text = lineText
                         confirmDialog.findViewById<Button>(R.id.confirmYes).setOnClickListener {
                             studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
                             studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
-                            queueUp.text = "You are number "+ dataSnapshot.childrenCount+1+" in line"
+                            queueUp.textOn = "You are number " + (dataSnapshot.childrenCount + 1) + " in line"
                             confirmDialog.dismiss()
+                            queueUp.isChecked = true
                         }
                         confirmDialog.findViewById<Button>(R.id.confirmNo).setOnClickListener {
                             confirmDialog.dismiss()
@@ -153,14 +151,17 @@ class TaInfo : Fragment() {
             }
         }
 
-        val classRef = database.child("Users").child(param1!!)
+        database.child("Users").child(param1!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError) {
                 }
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val taTimeString = dataSnapshot.child("TAData").child("Schedule").value.toString()
+                    val taDescString = dataSnapshot.child("TAData").child("Description").value.toString()
+
                     taName.text = dataSnapshot.child("Name").value.toString()
-                    taTime.text = dataSnapshot.child("TAData").child("Schedule").value.toString()
-                    taDesc.text = dataSnapshot.child("TAData").child("Description").value.toString()
+                    taTime.text = "Office Hours: $taTimeString"
+                    taDesc.text = "Note: $taDescString"
                 }
             })
 
