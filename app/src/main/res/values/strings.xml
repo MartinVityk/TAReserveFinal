@@ -47,6 +47,12 @@
     <string name="chooseTAText">TA Selection</string>
     <string name="chooseTALoading">Loading…</string>
 
+    <!-- TA Info Constants -->
+    <string name="taNameText">TA Name</string>
+    <string name="taTimesText">Office Hours:</string>
+    <string name="taDescriptionText">Description:</string>
+    <string name="queueUpButtonText">Get in Line</string>
+
     <!-- TA View Constants -->
     <string name="seeImageView">Press here to see/change your profile pic</string>
 
