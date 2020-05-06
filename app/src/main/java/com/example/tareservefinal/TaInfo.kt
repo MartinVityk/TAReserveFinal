@@ -104,6 +104,7 @@ class TaInfo : Fragment() {
                             if(dataSnapshot.childrenCount == 1.toLong())
                                 studentRef.child("NumStudents").setValue(0)
                             confirmDialog.dismiss()
+                            model.reservedTA = "null"
                             queueUp.isChecked = false
                         }
                         confirmDialog.findViewById<Button>(R.id.confirmNo).setOnClickListener {
@@ -135,6 +136,7 @@ class TaInfo : Fragment() {
                             studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
                             queueUp.textOn = "You are number " + (dataSnapshot.childrenCount + 1) + " in line"
                             confirmDialog.dismiss()
+                            model.reservedTA = param1!!
                             queueUp.isChecked = true
                         }
                         confirmDialog.findViewById<Button>(R.id.confirmNo).setOnClickListener {

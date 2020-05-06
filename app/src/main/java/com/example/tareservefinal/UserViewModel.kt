@@ -11,9 +11,11 @@ import kotlin.collections.ArrayList
 
 class UserViewModel(application: Application): AndroidViewModel(application){
     // TODO: Look to change this to private & move to 'User' Class Object
-    var userId = "1160826215"
+    var userId = "null"
     var isTA = "0"
     var userToken = "null"
+    var studentServe = "null"
+    var reservedTA = "null"
     var timeSec = 0
     var timeMin = 0
     private var running = false

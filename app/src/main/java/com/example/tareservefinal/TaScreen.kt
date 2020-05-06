@@ -1,20 +1,24 @@
 package com.example.tareservefinal
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+import org.w3c.dom.Text
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,11 +36,10 @@ class TaScreen : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var database: DatabaseReference
+    private lateinit var storage: FirebaseStorage
+    private lateinit var progressBar: ProgressBar
+    var model: UserViewModel? = null
 
-    private lateinit var officeHoursText: EditText
-    private lateinit var locationText: EditText
-    private lateinit var officeHoursButton: Button
-    private lateinit var locationButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +57,7 @@ class TaScreen : Fragment() {
         return inflater.inflate(R.layout.fragment_ta_screen, container, false)
     }
 
-    fun updateText(currStudent:TextView, ref:Query)
+    private fun updateText(currStudent:TextView, nextStudent:TextView, ref:Query)
     {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
@@ -64,12 +67,14 @@ class TaScreen : Fragment() {
                 dataSnapshot.children.forEach {
                     if(x == 0)
                     {
+                        model!!.studentServe = it.key.toString()
                         database.child("Users").child(it.key!!)
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(databaseError: DatabaseError) {
                                 }
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                    currStudent.text = "You are serving: " + dataSnapshot.child("Name").value.toString()
+                                    //currStudent.text = "Serving: " + dataSnapshot.child("Name").value.toString()
+
                                 }
                             })
                     }
@@ -79,6 +84,25 @@ class TaScreen : Fragment() {
                 if(x == 0)
                 {
                     currStudent.text = "No Students in Line!"
+
+                }
+                else
+                {
+                    currStudent.text = ""+x+" Students in Line"
+                    nextStudent
+                }
+                if(model!!.studentServe !="null") {
+                    database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(databaseError: DatabaseError) {
+                        }
+
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            currStudent.text = "Serving: " + dataSnapshot.value.toString()
+                        }
+                    })
+                }
+                else {
+                    nextStudent.text = ""
                 }
             }
 
@@ -89,22 +113,39 @@ class TaScreen : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nextStudent = view.findViewById<TextView>(R.id.nextStudent)
+        val currStudent = view.findViewById<TextView>(R.id.nextStudent2)
         val takeNextStudent = view.findViewById<Button>(R.id.nextInLine)
-        officeHoursButton = view.findViewById(R.id.officeHourUpdateButton)
-        officeHoursText = view.findViewById(R.id.officeHoursEditText)
-        locationButton = view.findViewById(R.id.locationButton)
-        locationText = view.findViewById(R.id.locationEditText)
+        val taName = view.findViewById<TextView>(R.id.taName)
+        val taDesc = view.findViewById<TextView>(R.id.taDescript)
+        val taTime = view.findViewById<TextView>(R.id.taTimes)
+        progressBar = view.findViewById<ProgressBar>(R.id.taInfoProgressBar2)
 
-
-        val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+        model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
         database = FirebaseDatabase.getInstance().reference
         var userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
-        updateText(nextStudent, userRef)
+        var userRef2 = database.child("Users").child(model!!.userId).child("TAData")
 
-        val switchViewText = view.findViewById<TextView>(R.id.switchToStudentView)
+
+        val switchViewText = view.findViewById<ImageView>(R.id.profileEdit)
         switchViewText.setOnClickListener {
             view.findNavController().navigate(R.id.action_taScreen_to_taImageSelection)
         }
+
+        database.child("Users").child(model!!.userId)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val taTimeString = dataSnapshot.child("TAData").child("Schedule").value.toString()
+                        val taDescString = dataSnapshot.child("TAData").child("Description").value.toString()
+
+                        taName.text = dataSnapshot.child("Name").value.toString()
+                        taTime.text = "Office Hours: $taTimeString"
+                        taDesc.text = "Note: $taDescString"
+                    }
+                })
+
+        loadProfilePic(view)
 
 
         userRef.addValueEventListener(
@@ -119,122 +160,86 @@ class TaScreen : Fragment() {
                             if(x == 0)
                             {
                                 println("BIL"+it.value.toString())
-                                database.child("Users").child(it.key.toString()).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onCancelled(databaseError: DatabaseError) {
-                                    }
-
-                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                        nextStudent.text = "You are serving: " + dataSnapshot.value.toString()
-                                    }
-                                })
-                                x++
+                                model!!.studentServe = it.key.toString()
                             }
+                            x++
                         }
                         if(x == 0)
                         {
                             nextStudent.text = "No Students in Line!"
+                        }
+                        else
+                        {
+                            nextStudent.text = ""+x+" Students in Line"
                         }
                     }
                 }
         )
 
         takeNextStudent.setOnClickListener {
-            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            if(!model!!.studentServe.equals("null")) {
+                database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
                     }
+
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var x = 0
-
-                        dataSnapshot.children.forEach {
-                            if(x == 0)
-                            {
-                                database.child("Users").child(it.value.toString()).child("UserToken").addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onCancelled(databaseError: DatabaseError) {
-                                    }
-
-                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-
-                                        val message: RemoteMessage = RemoteMessage.Builder(it.value.toString())
-                                                .addData("score","850")
-                                                .addData("time","2:45")
-                                                .build()
-
-
-                                        val response = FirebaseMessaging.getInstance().send(message)
-
-                                    }
-                                })
-                                it.ref.removeValue()
-                                //userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
-                                updateText(nextStudent, userRef)
-                            }
-                            else if (x == 1)
-                            {
-                                updateText(nextStudent, userRef)
-                            }
-                            x++
+                        if(currStudent.text.equals("Serving: "+dataSnapshot.value))
+                        {
+                            model!!.studentServe = "null"
+                            currStudent.text = ""
+                        }
+                        else
+                        {
+                            currStudent.text = "Serving: " + dataSnapshot.value.toString()
                         }
 
+                    }
+                })
+                userRef2.child("dequeuedStudent").setValue(1)
+                userRef2.child("StudentList").child(model!!.studentServe).removeValue()
 
+                database.child("Users").child(model!!.userId).child("TAData").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var numStud = dataSnapshot.child("NumStudents").value.toString().toInt()
+
+                        if (numStud > 0)
+                            dataSnapshot.child("NumStudents").ref.setValue(numStud - 1)
                     }
 
                 })
-            database.child("Users").child(model!!.userId).child("TAData").
-                addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(databaseError: DatabaseError) {
-                }
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    var numStud = dataSnapshot.child("NumStudents").value.toString().toInt()
-
-                    if(numStud > 0)
-                    dataSnapshot.child("NumStudents").ref.setValue(numStud-1)
-                }
-
-            })
+            }
+            else
+            {
+                currStudent.text = ""
+            }
 
         }
-
-        setupOfficeHours()
-        setupLocation()
+        updateText( nextStudent,currStudent, userRef)
 
     }
 
-    private fun setupOfficeHours() {
+    private fun loadProfilePic(view: View) {
+        storage = Firebase.storage
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 
-        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("Schedule")
+        val imageEndpoint = "gs://tareservefinal.appspot.com/" + model!!.userId + ".JPG"
 
-        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                officeHoursText.setText(dataSnapshot.value.toString())
-            }
-        })
-
-        officeHoursButton.setOnClickListener {
-            userRef.setValue(officeHoursText.text.toString())
+        val gsReference = storage.getReferenceFromUrl(imageEndpoint)
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 5
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bmp = BitmapFactory.decodeByteArray(it, 0, it.size)
+            val imageView = view.findViewById<ImageView>(R.id.taImage2)
+            imageView.setImageBitmap(bmp)
+            progressBar.visibility = View.GONE
+        }.addOnFailureListener {
+            progressBar.visibility = View.GONE
         }
     }
 
-    private fun setupLocation() {
-        val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 
-        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("Description")
-
-        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                locationText.setText(dataSnapshot.value.toString())
-            }
-        })
-
-        locationButton.setOnClickListener {
-            userRef.setValue(locationText.text.toString())
-        }
-    }
 
     companion object {
         /**

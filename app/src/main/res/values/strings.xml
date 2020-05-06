@@ -54,14 +54,15 @@
     <string name="queueUpButtonText">Get in Line</string>
 
     <!-- TA View Constants -->
-    <string name="seeImageView">Press here to see/change your profile pic</string>
+    <string name="seeImageView">Press here to edit your profile</string>
     <string name="scheduleMsgHint">Enter your Office Hours here</string>
     <string name="scheduleButtonText">Update Office Hours</string>
     <string name="descriptionMsgHint">Enter your Location here</string>
     <string name="descriptionButtonText">Update Location</string>
+    <string name="previewText">Profile Preview:</string>
 
     <!-- TA Image Constants -->
-    <string name="taImageSelectionText">TA Image Selection</string>
+    <string name="taImageSelectionText">TA Edit Profile</string>
     <string name="currentImage">Current Image:</string>
     <string name="loading">Loading…</string>
     <string name="setNewImageButton">Upload Image</string>

@@ -10,13 +10,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -29,10 +28,15 @@ import java.io.ByteArrayOutputStream
 class taImageSelection : Fragment() {
 
     private lateinit var storage: FirebaseStorage
+    private lateinit var database: DatabaseReference
     private lateinit var progressSpinner: ProgressBar
     private lateinit var currTextView: TextView
     private lateinit var model: UserViewModel
     private lateinit var imageView: ImageView
+    private lateinit var officeHoursText: EditText
+    private lateinit var locationText: EditText
+    private lateinit var officeHoursButton: Button
+    private lateinit var locationButton: Button
 
     private val GALLERY_REQUEST_CODE = 1889
 
@@ -50,12 +54,23 @@ class taImageSelection : Fragment() {
         model =
             (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java] }!!)
 
+        database = FirebaseDatabase.getInstance().reference
         imageView = view.findViewById(R.id.currentImageView)
         progressSpinner = view.findViewById(R.id.progressBar)
         currTextView = view.findViewById(R.id.taImageLoading)
+        officeHoursButton = view.findViewById(R.id.officeHourUpdateButton2)
+        officeHoursText = view.findViewById(R.id.officeHoursEditText2)
+        locationButton = view.findViewById(R.id.locationButton2)
+        locationText = view.findViewById(R.id.locationEditText2)
         storage = Firebase.storage
 
         loadProfilePic()
+        setupOfficeHours()
+        setupLocation()
+
+        view.findViewById<Button>(R.id.finishButton).setOnClickListener {
+            view.findNavController().popBackStack()
+        }
 
         val uploadButton = view.findViewById<Button>(R.id.setNewImageButton)
         uploadButton.setOnClickListener { uploadImage() }
@@ -86,6 +101,7 @@ class taImageSelection : Fragment() {
                     val storageRef = storage.reference
                     val fileName = model.userId + ".JPG"
                     val mountainRef = storageRef.child(fileName)
+
 
                     imageView.setImageURI(selectedImage)
                     progressSpinner.visibility = View.VISIBLE
@@ -128,6 +144,42 @@ class taImageSelection : Fragment() {
         }.addOnFailureListener {
             currTextView.text = "A picture doesn't exist or failed to load"
             progressSpinner.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setupOfficeHours() {
+        val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+
+        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("Schedule")
+
+        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                officeHoursText.setText(dataSnapshot.value.toString())
+            }
+        })
+
+        officeHoursButton.setOnClickListener {
+            userRef.setValue(officeHoursText.text.toString())
+        }
+    }
+
+    private fun setupLocation() {
+        val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+
+        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("Description")
+
+        userRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                locationText.setText(dataSnapshot.value.toString())
+            }
+        })
+
+        locationButton.setOnClickListener {
+            userRef.setValue(locationText.text.toString())
         }
     }
 

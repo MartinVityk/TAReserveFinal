@@ -31,7 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     var timerCompletionReceiver: TimerBroadcastReciever? = null
     var model: UserViewModel? = null
     var timerDialog: Dialog? = null
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         //ViewModelProvider(XXX)
 
 
-        val database = FirebaseDatabase.getInstance().reference
+        database = FirebaseDatabase.getInstance().reference
         val account = GoogleSignIn.getLastSignedInAccount(this)
 
         setContentView(R.layout.activity_main)
@@ -163,6 +164,7 @@ class MainActivity : AppCompatActivity() {
         timerDialog!!.show()
         timerDialog!!.findViewById<Button>(R.id.declineButton).setOnClickListener {
             model!!.reset()
+            dequeueYourself()
             timerDialog!!.dismiss()
         }
         timerDialog!!.findViewById<Button>(R.id.acceptButton).setOnClickListener {
@@ -177,11 +179,32 @@ class MainActivity : AppCompatActivity() {
             if(checkSecs == (-1).toLong())
             {
                 model!!.reset()
+                dequeueYourself()
                 timerDialog!!.dismiss()
             }
             timerDialog!!.findViewById<TextView>(R.id.timerTime).text = checkSecs.toString()
         })
 
+    }
+
+    private fun dequeueYourself()
+    {
+        var userRef = database.child("Users").child(model!!.userId).child("TAData").child("StudentList")
+        userRef.orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var x = 0
+                dataSnapshot.children.forEach {
+                    if(x == 0)
+                    {
+                        userRef.child(it.key!!).removeValue()
+                    }
+                    x++
+                }
+            }
+        })
     }
 
     fun removeAllFragments(fragmentManager2:FragmentManager) {
