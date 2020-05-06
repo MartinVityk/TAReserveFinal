@@ -39,18 +39,27 @@
 
     <string name="taLoginPage">TA Login</string>
 
+    <!-- Class Selection Constants -->
+    <string name="chooseClassText">Course Selection</string>
+    <string name="chooseClassLoading">Loading…</string>
+
+    <!-- TA Selection Constants -->
+    <string name="chooseTAText">TA Selection</string>
+    <string name="chooseTALoading">Loading…</string>
+
     <!-- TA View Constants -->
     <string name="seeImageView">Press here to see/change your profile pic</string>
 
     <!-- TA Image Constants -->
     <string name="taImageSelectionText">TA Image Selection</string>
     <string name="currentImage">Current Image:</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="setNewImageButton">Upload Image</string>
 
     <!-- Remove Class Constants -->
     <string name="removeClassText">Remove Courses</string>
     <string name="removeClassButton">Delete</string>
     <string name="cancelRemoveClassButton">Cancel</string>
+    <string name="removeCourseLoading">Loading…</string>
 
 </resources>

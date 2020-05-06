@@ -37,6 +37,8 @@ class ClassSelection : Fragment() {
     private var param2: String? = null
     private lateinit var database: DatabaseReference
 
+    private lateinit var loadingTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,8 @@ class ClassSelection : Fragment() {
         val model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
 
         (activity as MainActivity).supportActionBar?.setTitle(GoogleSignIn.getLastSignedInAccount(activity)?.displayName)
+
+        loadingTextView = view.findViewById(R.id.courseLoadingTextView)
 
         super.onViewCreated(view, savedInstanceState)
         val IdArrayList = ArrayList<String>()
@@ -97,6 +101,9 @@ class ClassSelection : Fragment() {
                                     if(id.contains(" "))
                                         classArrayList.add(dataSnapshot.child(id.substring(0, id.indexOf(" "))).child(id).key.toString())
                                 }
+                                if (classArrayList.size == 0) loadingTextView.text = "Click the button in the bottom-right corner to add a course"
+                                else loadingTextView.visibility = View.INVISIBLE
+
                                 adapter.setClasses(classArrayList)
                             }
                         })
@@ -138,6 +145,9 @@ class ClassSelection : Fragment() {
                     if(id.contains(" "))
                     classArrayList.add(dataSnapshot.child(id.substring(0, id.indexOf(" "))).child(id).key.toString())
                 }
+                if (classArrayList.size == 0) loadingTextView.text = "Click the button in the bottom-right corner to add a course"
+                else loadingTextView.visibility = View.INVISIBLE
+
                 adapter.setClasses(classArrayList)
             }
         })
