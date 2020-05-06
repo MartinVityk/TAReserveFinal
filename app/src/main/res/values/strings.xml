@@ -6,6 +6,9 @@
     <string name="message_hint">Notification student will see</string>
     <string name="no_student1">No Current Student</string>
     <string name="wait_message">Your TA is waiting!!</string>
+    <string name="wait_submessage">You have 1 minute to accept</string>
+    <string name="confirm_title">Are you sure you want to queue for this TA?</string>
+    <string name="confirm_subtitle">You will be Nth in line</string>
     <string name="Accept">Accept</string>
     <string name="wait_time">60</string>
     <string name="enter_line">GET IN LINE</string>

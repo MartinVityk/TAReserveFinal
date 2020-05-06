@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
@@ -43,6 +44,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if(intent.flags == 100)
+        {
+            println(intent.flags.toString()+"OKK")
+            supportFragmentManager.popBackStack()
+            //finish()
+            //return
+        }
         createNotificationChannel()
 
         timerDialog = Dialog(this)

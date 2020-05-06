@@ -1,14 +1,12 @@
 package com.example.tareservefinal
 
+import android.app.Dialog
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.ToggleButton
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -65,13 +63,24 @@ class TaInfo : Fragment() {
         val studentRef = database.child("Users").child(param1!!).child("TAData")
         progressBar = view.findViewById(R.id.taInfoProgressBar)
 
-        studentRef.child("StudentList").addValueEventListener(
+        studentRef.child("StudentList").orderByValue().addValueEventListener(
                 object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         queueUp.isChecked = dataSnapshot.child(model!!.userId).exists()
+                        if(queueUp.isChecked)
+                        {
+                            var x = 1
+                            dataSnapshot.children.forEach {
+                                if(it.key == model!!.userId)
+                                {
+                                    queueUp.text = "You are number "+ x+" in line"
+                                }
+                                x++
+                            }
+                        }
                     }
                 }
         )
@@ -85,11 +94,28 @@ class TaInfo : Fragment() {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var numStudents = dataSnapshot.value.toString()
-                        print(dataSnapshot.childrenCount.toString()+ "HEREEE")
-                        studentRef.child("StudentList").child(model!!.userId).removeValue()
-                        if(dataSnapshot.childrenCount == 1.toLong())
-                            studentRef.child("NumStudents").setValue(0)
+
+                        val confirmDialog = Dialog(context!!)
+                        confirmDialog.setContentView(R.layout.confirm_pop_up)
+                        confirmDialog.show()
+                        confirmDialog.findViewById<TextView>(R.id.confirmText2).text = "Are you sure you want to leave this TA line?"
+                        confirmDialog.findViewById<TextView>(R.id.lineText).text = "He will miss you :("
+                        confirmDialog.findViewById<Button>(R.id.confirmYes).setOnClickListener {
+                            var numStudents = dataSnapshot.value.toString()
+                            print(dataSnapshot.childrenCount.toString()+ "HEREEE")
+                            studentRef.child("StudentList").child(model!!.userId).removeValue()
+                            if(dataSnapshot.childrenCount == 1.toLong())
+                                studentRef.child("NumStudents").setValue(0)
+                            confirmDialog.dismiss()
+                        }
+                        confirmDialog.findViewById<Button>(R.id.confirmNo).setOnClickListener {
+                            confirmDialog.dismiss()
+                            queueUp.isChecked = true
+                        }
+                        confirmDialog.setOnCancelListener {
+                            queueUp.isChecked = true
+                        }
+
                     }
                 })
             }
@@ -103,8 +129,24 @@ class TaInfo : Fragment() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         numStudents = dataSnapshot.value.toString()
                         //print(dataSnapshot.value.toString()+"MISSINGO")
-                        studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
-                        studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
+                        val confirmDialog = Dialog(context!!)
+                        confirmDialog.setContentView(R.layout.confirm_pop_up)
+                        confirmDialog.show()
+                        confirmDialog.findViewById<TextView>(R.id.lineText).text = "You will be position number "+numStudents+" in line"
+                        confirmDialog.findViewById<Button>(R.id.confirmYes).setOnClickListener {
+                            studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
+                            studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
+                            queueUp.text = "You are number "+ dataSnapshot.childrenCount+1+" in line"
+                            confirmDialog.dismiss()
+                        }
+                        confirmDialog.findViewById<Button>(R.id.confirmNo).setOnClickListener {
+                            confirmDialog.dismiss()
+                            queueUp.isChecked = false
+                        }
+                        confirmDialog.setOnCancelListener {
+                            queueUp.isChecked = false
+                        }
+
                     }
                 })
                 classRef.run {  }

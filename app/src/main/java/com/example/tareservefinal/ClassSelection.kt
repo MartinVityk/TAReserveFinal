@@ -177,8 +177,11 @@ class ClassSelection : Fragment() {
                         .build()
                 GoogleSignIn.getClient(requireActivity(), gso).signOut()
                         .addOnCompleteListener(requireActivity(), OnCompleteListener<Void?> {
-                            requireView().findNavController().navigate(
-                                    R.id.action_classSelection_to_loginScreen)
+                            GoogleSignIn.getClient(requireActivity(), gso).revokeAccess()
+                                    .addOnCompleteListener(requireActivity(), OnCompleteListener<Void?> {
+                                        requireView().findNavController().navigate(
+                                                R.id.action_classSelection_to_loginScreen)
+                                    })
                         })
             }
         }

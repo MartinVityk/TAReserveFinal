@@ -27,7 +27,7 @@ class MyFirebaseMessagingService() : FirebaseMessagingService(){
         super.onMessageReceived(p0)
         println("JIM" + p0.data.get("body")+ p0.data.get("title"))
         val notificationIntent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
 
 
@@ -46,7 +46,7 @@ class MyFirebaseMessagingService() : FirebaseMessagingService(){
             notificationIntent.putExtra("acceptStart", 0)
         }
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 100 )
         val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, "123")
             .setContentTitle(p0.data.get("title"))
             .setContentText(p0.data.get("body"))
