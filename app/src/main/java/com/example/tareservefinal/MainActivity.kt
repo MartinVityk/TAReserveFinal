@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity() {
     private fun dequeueYourself()
     {
         var userRef = database.child("Users").child(model!!.reservedTA).child("TAData")
-        userRef.child("dequeuedStudent").setValue(1)
+
         userRef.orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
             }
@@ -201,6 +201,7 @@ class MainActivity : AppCompatActivity() {
                 dataSnapshot.child("StudentList").children.forEach {
                     if(x == 0)
                     {
+                        userRef.child("dequeuedStudent").setValue(1)
                         userRef.child(it.key!!).removeValue()
                     }
                     x++

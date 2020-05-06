@@ -195,21 +195,25 @@ class TaScreen : Fragment() {
 
                     }
                 })
-                userRef2.child("dequeuedStudent").setValue(1)
-                userRef2.child("StudentList").child(model!!.studentServe).removeValue()
+                if(!model!!.studentServe.equals("null")) {
+                    userRef2.child("dequeuedStudent").setValue(1)
+                    userRef2.child("StudentList").child(model!!.studentServe).removeValue()
 
-                database.child("Users").child(model!!.userId).child("TAData").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(databaseError: DatabaseError) {
-                    }
+                    database.child("Users").child(model!!.userId).child("TAData")
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(databaseError: DatabaseError) {
+                            }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var numStud = dataSnapshot.child("NumStudents").value.toString().toInt()
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                var numStud =
+                                    dataSnapshot.child("NumStudents").value.toString().toInt()
 
-                        if (!dataSnapshot.child("StudentList").exists())
-                            dataSnapshot.child("NumStudents").ref.setValue(0)
-                    }
+                                if (!dataSnapshot.child("StudentList").exists())
+                                    dataSnapshot.child("NumStudents").ref.setValue(0)
+                            }
 
-                })
+                        })
+                }
             }
             else
             {
