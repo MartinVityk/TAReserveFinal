@@ -30,6 +30,9 @@ class TaSelection : Fragment() {
     private var param2: String? = null
     private lateinit var database: DatabaseReference
 
+    private lateinit var taSelectionTextView: TextView
+    private lateinit var loadingTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +55,12 @@ class TaSelection : Fragment() {
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         database = FirebaseDatabase.getInstance().reference
 
+        // Setup TextViews
+        taSelectionTextView = view.findViewById(R.id.taSelectionTextView)
+        val titleText = "$param1 TA's"
+        taSelectionTextView.text = titleText
+
+        loadingTextView = view.findViewById(R.id.taLoadingTextView)
 
         val IdArrayList = ArrayList<String>()
         val classArrayList = ArrayList<String>()
@@ -89,6 +98,9 @@ class TaSelection : Fragment() {
                 {
                     classArrayList.add(dataSnapshot.child(id).child("Name").value.toString())
                 }
+                if (classArrayList.size == 0) loadingTextView.text = "No TA is listed for this course"
+                else loadingTextView.visibility = View.GONE
+
                 adapter.setClasses(classArrayList)
             }
         })

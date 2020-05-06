@@ -22,6 +22,7 @@ import com.google.firebase.database.*
  */
 class classRemoval : Fragment() {
 
+    private lateinit var loadingTextView: TextView
     private lateinit var cancelButton:Button
     private lateinit var deleteButton:Button
     private var count:Int = 0
@@ -42,10 +43,10 @@ class classRemoval : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         count = 0
-
         model = (activity?.let { ViewModelProvider(activity as FragmentActivity)[UserViewModel::class.java]})
+
+        loadingTextView = view.findViewById(R.id.removeCourseLoadingTextView)
 
         cancelButton = view.findViewById(R.id.cancelCourseRemovalButton)
         cancelButton.setOnClickListener { view.findNavController().popBackStack() }
@@ -92,6 +93,9 @@ class classRemoval : Fragment() {
                     if(id.contains(" "))
                         classArrayList.add(dataSnapshot.child(id.substring(0, id.indexOf(" "))).child(id).key.toString())
                 }
+                if (classArrayList.size == 0) loadingTextView.text = "No courses to remove"
+                else loadingTextView.visibility = View.GONE
+
                 adapter.setClasses(classArrayList)
             }
         })
