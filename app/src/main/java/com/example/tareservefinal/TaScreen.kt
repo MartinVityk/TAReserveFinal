@@ -205,8 +205,8 @@ class TaScreen : Fragment() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         var numStud = dataSnapshot.child("NumStudents").value.toString().toInt()
 
-                        if (numStud > 0)
-                            dataSnapshot.child("NumStudents").ref.setValue(numStud - 1)
+                        if (!dataSnapshot.child("StudentList").exists())
+                            dataSnapshot.child("NumStudents").ref.setValue(0)
                     }
 
                 })
