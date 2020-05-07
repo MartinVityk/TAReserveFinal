@@ -190,22 +190,23 @@ class MainActivity : AppCompatActivity() {
     private fun dequeueYourself()
     {
         var userRef = database.child("Users").child(model!!.reservedTA).child("TAData")
-
-        userRef.orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef.child("dequeuedStudent").setValue(1)
+        userRef.child("StudentList").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var x = 0
 
-                dataSnapshot.child("StudentList").children.forEach {
+                dataSnapshot.children.forEach {
                     if(x == 0)
                     {
-                        userRef.child("dequeuedStudent").setValue(1)
-                        userRef.child(it.key!!).removeValue()
+                        userRef.child("StudentList").child(it.key!!).removeValue()
                     }
                     x++
                 }
+                if(x == 0)
+                    userRef.child("dequeuedStudent").setValue(0)
             }
         })
     }
