@@ -131,7 +131,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="#6A2C3E"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/next_student"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintBottom_toTopOf="@+id/nextStudent2"
