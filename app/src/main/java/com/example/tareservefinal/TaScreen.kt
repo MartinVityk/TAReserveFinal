@@ -153,7 +153,7 @@ class TaScreen : Fragment() {
 
         takeNextStudent.setOnClickListener {
 
-            database.child("Users").child(model!!.userId).child("TAData").child("StudentList")
+            database.child("Users").child(model!!.userId).child("TAData").child("StudentList").orderByValue()
                     .addListenerForSingleValueEvent(object : ValueEventListener {
 
                         override fun onCancelled(databaseError: DatabaseError) {
@@ -173,7 +173,6 @@ class TaScreen : Fragment() {
                                 }
                                 x++
                             }
-                            userRef2.child("StudentList").child(model!!.studentServe).removeValue()
                             if(x == 0)
                             {
                                 model!!.studentServe = "null"
@@ -181,6 +180,8 @@ class TaScreen : Fragment() {
                             }
                             else
                             {
+                                userRef2.child("dequeuedStudent").setValue(1)
+                                userRef2.child("StudentList").child(model!!.studentServe).removeValue()
                                 database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onCancelled(databaseError: DatabaseError) {
                                     }
