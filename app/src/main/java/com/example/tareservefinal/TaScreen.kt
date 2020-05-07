@@ -137,7 +137,7 @@ class TaScreen : Fragment() {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         var x = dataSnapshot.childrenCount.toInt()
-                        println("BILL"+dataSnapshot.value.toString())
+                        //println("BILL"+dataSnapshot.value.toString())
 
                         if(x == 0)
                         {

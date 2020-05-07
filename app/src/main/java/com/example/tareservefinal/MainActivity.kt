@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         if(intent.flags == 100)
         {
-            println(intent.flags.toString()+"OKK")
+            //println(intent.flags.toString()+"OKK")
             supportFragmentManager.popBackStack()
             //finish()
             //return
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if(account != null) {
-            println("BOB")
+            //println("BOB")
             graph.startDestination = R.id.classSelection
             val hashCode = HashCode().hashCode(account!!.email!!)
             model?.setUserID(hashCode)
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
         else
         {
-            println("WHAT")
+            //println("WHAT")
         }
 
 
