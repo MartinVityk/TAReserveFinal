@@ -31,6 +31,8 @@
     <string name="studentRegisterPage">Student Register</string>
     <string name="studentRegisterNameInputHint">Enter Name Here</string>
     <string name="StudentRegisterButton">Create Account</string>
+    <string name="studentRegisterHintEmail">example@vt.edu</string>
+    <string name="studentRegisterHintName">John Doe</string>
 
     <string name="registerSuccess">Registration Successful</string>
     <string name="returnToSignInButton">Press Here to Return to Sign In</string>
