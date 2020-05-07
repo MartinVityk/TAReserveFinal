@@ -147,6 +147,26 @@ class TaScreen : Fragment() {
                         {
                             nextStudent.text = ""+x+" Students in Line"
                         }
+
+                        userRef2.child("servedStudent").addListenerForSingleValueEvent(object : ValueEventListener {
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                            }
+
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                if(dataSnapshot.value.toString()!="null") {
+                                    model!!.studentServe = dataSnapshot.value.toString()
+                                    database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onCancelled(databaseError: DatabaseError) {
+                                        }
+
+                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                            currStudent.text = "Serving: " + dataSnapshot.value.toString()
+                                        }
+                                    })
+                                }
+                            }
+                        })
                     }
                 }
         )
