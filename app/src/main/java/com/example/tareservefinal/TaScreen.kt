@@ -148,28 +148,28 @@ class TaScreen : Fragment() {
                             nextStudent.text = ""+x+" Students in Line"
                         }
 
-                        userRef2.child("servedStudent").addListenerForSingleValueEvent(object : ValueEventListener {
-
-                            override fun onCancelled(databaseError: DatabaseError) {
-                            }
-
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                if(dataSnapshot.value.toString()!="null") {
-                                    model!!.studentServe = dataSnapshot.value.toString()
-                                    database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
-                                        override fun onCancelled(databaseError: DatabaseError) {
-                                        }
-
-                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                            currStudent.text = "Serving: " + dataSnapshot.value.toString()
-                                        }
-                                    })
-                                }
-                            }
-                        })
                     }
                 }
         )
+        userRef2.child("servedStudent").addValueEventListener(object : ValueEventListener {
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.value.toString()!="null") {
+                    model!!.studentServe = dataSnapshot.value.toString()
+                    database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(databaseError: DatabaseError) {
+                        }
+
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            currStudent.text = "Serving: " + dataSnapshot.value.toString()
+                        }
+                    })
+                }
+            }
+        })
 
         takeNextStudent.setOnClickListener {
 
@@ -195,6 +195,7 @@ class TaScreen : Fragment() {
                             }
                             if(x == 0)
                             {
+                                userRef2.child("servedStudent").setValue("null")
                                 model!!.studentServe = "null"
                                 currStudent.text = ""
                             }
