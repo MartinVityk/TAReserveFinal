@@ -17,6 +17,7 @@
 
         <TextView
             android:id="@+id/timerTime"
+            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="98dp"
@@ -52,6 +53,7 @@
         <TextView
             android:id="@+id/confirmText"
             android:layout_width="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_height="wrap_content"
             android:layout_marginBottom="42dp"
             android:text="@string/wait_message"
@@ -63,6 +65,7 @@
         <ProgressBar
             android:id="@+id/progressBar2"
             style="?android:attr/progressBarStyle"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="109dp"
