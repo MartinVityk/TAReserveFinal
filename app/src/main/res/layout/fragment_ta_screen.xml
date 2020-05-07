@@ -143,10 +143,8 @@
         android:id="@+id/profileEdit"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
         android:src="@drawable/ic_create_trueblack_24dp"
-        app:layout_constraintEnd_toEndOf="@+id/taImage2"
-        app:layout_constraintTop_toTopOf="@+id/taImage2" />
+        app:layout_constraintStart_toEndOf="@+id/previewTitle"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

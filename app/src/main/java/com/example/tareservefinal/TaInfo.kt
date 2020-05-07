@@ -121,12 +121,12 @@ class TaInfo : Fragment() {
             else
             {
                 queueUp.isChecked = false
-                val classRef = studentRef.child("NumStudents").addListenerForSingleValueEvent(object : ValueEventListener {
+                val classRef = studentRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {}
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var numStudents = dataSnapshot.value.toString()
-                        val lineText = "You will be position number " + (numStudents.toInt() + 1) + " in line"
+                        var numStudents = dataSnapshot.child("NumStudents").value.toString()
+                        val lineText = "You will be position number " + (dataSnapshot.child("StudentList").childrenCount+1) + " in line"
                         val confirmDialog = Dialog(context!!)
                         confirmDialog.setContentView(R.layout.confirm_pop_up)
                         confirmDialog.show()
@@ -134,7 +134,7 @@ class TaInfo : Fragment() {
                         confirmDialog.findViewById<Button>(R.id.confirmYes).setOnClickListener {
                             studentRef.child("StudentList").child(model!!.userId).setValue(numStudents.toInt()+1)
                             studentRef.child("NumStudents").setValue(numStudents.toInt()+1)
-                            queueUp.textOn = "You are number " + (dataSnapshot.childrenCount + 1) + " in line"
+                            queueUp.textOn = "You are number " + (dataSnapshot.child("StudentList").childrenCount + 1) + " in line"
                             confirmDialog.dismiss()
                             model.reservedTA = param1!!
                             queueUp.isChecked = true

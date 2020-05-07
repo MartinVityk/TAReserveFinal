@@ -136,16 +136,9 @@ class TaScreen : Fragment() {
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        var x = 0
+                        var x = dataSnapshot.childrenCount.toInt()
                         println("BILL"+dataSnapshot.value.toString())
-                        dataSnapshot.children.forEach {
-                            if(x == 0)
-                            {
-                                println("BIL"+it.value.toString())
-                                model!!.studentServe = it.key.toString()
-                            }
-                            x++
-                        }
+
                         if(x == 0)
                         {
                             nextStudent.text = "No Students in Line!"
@@ -159,49 +152,47 @@ class TaScreen : Fragment() {
         )
 
         takeNextStudent.setOnClickListener {
-            if(!model!!.studentServe.equals("null")) {
-                database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(databaseError: DatabaseError) {
-                    }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        if(currStudent.text.equals("Serving: "+dataSnapshot.value))
-                        {
-                            model!!.studentServe = "null"
-                            currStudent.text = ""
-                        }
-                        else
-                        {
-                            currStudent.text = "Serving: " + dataSnapshot.value.toString()
+            database.child("Users").child(model!!.userId).child("TAData").child("StudentList")
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+
+                        override fun onCancelled(databaseError: DatabaseError) {
                         }
 
-                    }
-                })
-                if(!model!!.studentServe.equals("null")) {
-                    userRef2.child("dequeuedStudent").setValue(1)
-                    userRef2.child("StudentList").child(model!!.studentServe).removeValue()
-
-                    database.child("Users").child(model!!.userId).child("TAData")
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(databaseError: DatabaseError) {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            var x = 0
+                            if(dataSnapshot.childrenCount.toInt() == 1)
+                            {
+                                database.child("Users").child(model!!.userId).child("TAData").child("NumStudents").setValue(0)
                             }
+                            dataSnapshot.children.forEach {
 
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                var numStud =
-                                    dataSnapshot.child("NumStudents").value.toString().toInt()
-
-                                if (!dataSnapshot.child("StudentList").exists())
-                                    dataSnapshot.child("NumStudents").ref.setValue(0)
+                                if(x == 0)
+                                {
+                                    model!!.studentServe = it.key.toString()
+                                }
+                                x++
                             }
+                            userRef2.child("StudentList").child(model!!.studentServe).removeValue()
+                            if(x == 0)
+                            {
+                                model!!.studentServe = "null"
+                                currStudent.text = ""
+                            }
+                            else
+                            {
+                                database.child("Users").child(model!!.studentServe).child("Name").addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                    }
 
-                        })
-                }
-            }
-            else
-            {
-                currStudent.text = ""
-            }
+                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                        currStudent.text = "Serving: " + dataSnapshot.value.toString()
+                                    }
+                                })
+                            }
+                        }
 
+                    })
         }
         updateText( nextStudent,currStudent, userRef)
 
